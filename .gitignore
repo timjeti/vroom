@@ -1,2 +1,4 @@
-./webapp/node-modules
-*/node-modules
+./webapp/node_modules
+*node_modules
+*node_modules*
+webapp/node_modules/.cache/default-development/0.pack`
