@@ -17,7 +17,7 @@ function CarInitDb(){
       .catch((error) => {
         console.error('Error fetching car data:', error);
       });
-  }, []); // Empty dependency array ensures this effect runs once on component mount
+  }, [cars]); // passing cars so that every time new car is or it is removed, data gets reflected
 
   return cars;
 }

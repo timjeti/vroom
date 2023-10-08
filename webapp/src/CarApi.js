@@ -1,13 +1,15 @@
 import React from 'react';
 import axios from 'axios';
 
-const CarApi = (data, car_id) => {
-    function addCar(){
-        axios.post('http://localhost:4000', data)
+class CarApi {
+
+    static addCar(data){
+        axios.post('http://localhost:4000/cars/', data)
+        return;
     }
 
-    function deleteCar(){
-        axios.delete(`http://localhost:4000/${car_id}`)
+    static deleteCar(car_id){
+        axios.delete(`http://localhost:4000/cars/${car_id}`)
     }
 }
 

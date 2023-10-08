@@ -63,23 +63,17 @@ router.put('/:carId', (req, res) => {
       }
     }
   });
-});
+})
 
 router.post('/', (req, res) => {
-  const { car_id, car_path, car_name, car_price } = req.body; // Extract car details from the request body
+  const { car_id, car_name, car_price } = req.body; // Extract car details from the request body
 
+  
   // SQL query to insert a new car entry into the 'cars' table
-  const query = `
-  INSERT INTO cars (car_id, car_name, car_price, car_path)
-  VALUES (?, ?, ?, ?)
-  ON DUPLICATE KEY UPDATE
-  car_name = VALUES(car_name),
-  car_price = VALUES(car_price),
-  car_path = VALUES(car_path)
-`;
+  const query = 'UPDATE cars SET car_name = ?,car_price = ? WHERE car_id = ?';
 
   // Values to be inserted
-  const values = [car_id, car_path, car_name, car_price];
+  const values = [car_name, car_price, car_id];
 
   // Execute the SQL query to insert the new car entry
   connection.query(query, values, (err, results) => {
@@ -109,6 +103,7 @@ router.delete('/:carId', (req, res) => {
       res.status(500).json({ error: 'Failed to delete car details' });
     } else {
       if (results.affectedRows > 0) {
+        fileUtils.deleteUploadedFile(carId);
         res.json({ message: 'Car details deleted successfully' });
       } else {
         res.status(404).json({ error: 'Car not found' });
@@ -120,6 +115,10 @@ router.delete('/:carId', (req, res) => {
 router.post('/upload/:carId', upload.single('image'), async (req, res) => {
 	console.log("uploading picture")
   const carId = req.params.carId;
+  const isFirst = req.query.isFirst;
+  if(!isFirst){
+    res.status(201).json({ message: 'Image uploaded successfully' });
+  }
   const query = 'INSERT INTO cars (car_id, car_path) VALUES (?,?)';
   const car_path = `uploads/${carId}`
   const values = [carId, car_path];
@@ -131,6 +130,10 @@ router.post('/upload/:carId', upload.single('image'), async (req, res) => {
       // Execute the SQL query to update the car details
     connection.query(query, values, (err, results) => {
       if (err) {
+        if(err.message.includes('Duplicate entry')){
+          res.status(201).json({ message: 'Image uploaded successfully' });
+          return;
+        }
         console.error('Error uploading car image:', err);
         fileUtils.deleteUploadedFile(carId);
         res.status(500).json({ error: 'Failed to upload car image' });
@@ -140,7 +143,7 @@ router.post('/upload/:carId', upload.single('image'), async (req, res) => {
     });
 	} 
 	catch (error) {
-    console.log(error);
+    // console.log(error);
     return res.status(500).json({ message: 'Internal server error' });
 	}
 	}

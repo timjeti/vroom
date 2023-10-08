@@ -1,9 +1,8 @@
-import { React,  useState } from 'react';
+import { React,  useState, useEffect } from 'react';
 import CarManagerRow from './CarManagerRow';
 import { Row, Col } from 'antd';
 import CarInitDb from './CarInitDb'
 import { Button } from 'antd/es/radio';
-import Icon from '@ant-design/icons/lib/components/Icon';
 import { PlusCircleFilled } from '@ant-design/icons';
 import NewCar from './NewCar';
 
@@ -13,11 +12,11 @@ const CarManager = () => {
 
   const [showComponent, setShowComponent] = useState(false);
 
+  const photoList = CarInitDb();
+
   const toggleComponent = () => {
       setShowComponent(!showComponent);
   };
-
-    const photoList = CarInitDb();
 
       return (
       <>
@@ -34,7 +33,6 @@ const CarManager = () => {
               )
               :
               (<p></p>)
-            
             }
             
             {/* <Divider type="vertical" style={{ background:"#000", height:300 }} /> */}

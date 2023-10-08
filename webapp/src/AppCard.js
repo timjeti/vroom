@@ -6,7 +6,7 @@ import Icon from '@ant-design/icons/lib/components/Icon';
 import ImageComponent from './ImageComponent';
 const { Meta } = Card;
 
-const AppCard = ({car_id, car_path, car_name, car_price}) => {
+const AppCard = ({car_id, car_name, car_price}) => {
 
   const handleCallClick = () => {
     // Add your logic for the Call button click here
@@ -46,7 +46,7 @@ const AppCard = ({car_id, car_path, car_name, car_price}) => {
     >
         <Row>
         
-        <Col span={15}><Meta car_name={car_name}/></Col>
+        <Col span={18}><Meta title={car_name}/></Col>
         <Col >
           <div>
               <FaIndianRupeeSign style={{ fontSize: '12px', marginRight: '1px' }}/><span style={{ fontWeight: 'bold' }}> {car_price}</span>
