@@ -1,0 +1,15 @@
+mysql -u root -p;
+create database jaawo;
+use jaawo;
+
+CREATE TABLE cars (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  car_name VARCHAR(255),
+  car_price DECIMAL(10, 2),
+  car_path VARCHAR(255)
+);
+
+INSERT INTO cars (car_path, car_name, car_price) VALUES
+  ('./assets/photo1.jpg', 'Hyundai Creta', 1000),
+  ('./assets/photo2.jpg', 'Mahindra Scorpio', 2000),
+  ('./assets/photo1.jpg', 'Hyundai Creta', 3000);
