@@ -68,7 +68,7 @@ router.put('/:carId', (req, res) => {
 router.post('/', (req, res) => {
   const { car_id, car_name, car_price } = req.body; // Extract car details from the request body
 
-  
+  console.log(car_id)
   // SQL query to insert a new car entry into the 'cars' table
   const query = 'UPDATE cars SET car_name = ?,car_price = ? WHERE car_id = ?';
 

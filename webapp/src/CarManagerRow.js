@@ -1,5 +1,5 @@
 import { React,  useState, useEffect } from 'react';
-import { Button, Row, Col, Form, Input } from 'antd';
+import { Button, Row, Col, Form, Input, Tooltip } from 'antd';
 import ImageUploadComponent from './ImageUploadComponent';
 import { DeleteOutlined, RightCircleFilled } from '@ant-design/icons';
 import CarApi from './CarApi';
@@ -54,16 +54,22 @@ const CarManagerRow = ({ car_id, car_name, car_price}) => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
         >
-            <Row>
+            <Row gutter={{
+                xs: 8,
+                sm: 16,
+                md: 24,
+                lg: 32,
+            }} style={{marginLeft:0, marginRight:2}}>
             <Col span={1} offset={0}>
                 <Form.Item >
-                <Button  onClick={handleButtonClick} icon={<DeleteOutlined />}>
-                </Button>
+                <Tooltip title="Delete">
+                    <Button  onClick={handleButtonClick} icon={<DeleteOutlined />}/>
+                </Tooltip>
                 </Form.Item>
             </Col>
             
 
-            <Col span={6}>
+            <Col span={9} offset={2}>
                 <Form.Item 
                 name="name"
                 rules={[
@@ -76,7 +82,7 @@ const CarManagerRow = ({ car_id, car_name, car_price}) => {
                 <Input defaultValue={car_name} onChange={(e) => {setCarName(e.target.value)}}/>
                 </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={4}>
                 <Form.Item
                 name="car_price"
                 rules={[
@@ -89,18 +95,18 @@ const CarManagerRow = ({ car_id, car_name, car_price}) => {
                 <Input defaultValue={car_price} onChange={(e) => {setCarPrice(e.target.value)}}/>
                 </Form.Item >
             </Col>
-            <Col span={3} offset={1}>
+            <Col span={3}>
                 <Form.Item
                 name="photo"
                 >
                 <ImageUploadComponent oldCarId={car_id} isFirst={false} passCarId={setCarIdFromChld}/>
                 </Form.Item>
             </Col>
-            <Col span={1} offset={0}>
+            <Col span={2}>
                 <Form.Item >
-                <Button  htmlType="submit" icon={<RightCircleFilled />}>
-                    
-                </Button>
+                <Tooltip title="Update">
+                <Button  htmlType="submit" icon={<RightCircleFilled />}/>
+                </Tooltip>
                 </Form.Item>
             </Col>
             </Row>

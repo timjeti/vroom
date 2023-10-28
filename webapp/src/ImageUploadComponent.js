@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Button, message } from 'antd';
+import { Upload, Button, message, Tooltip } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { properties } from './properties';
 
 function ImageUploadComponent({ oldCarId, isFirst, passCarId }) {
    
@@ -47,8 +48,8 @@ function ImageUploadComponent({ oldCarId, isFirst, passCarId }) {
       try {
         const formData = new FormData();
         formData.append('image', file);
-        console.log(`http://localhost:4000/cars/upload/${carId}?isFirst=${isFirst}`)
-        const response = await fetch(`http://localhost:4000/cars/upload/${carId}?isFirst=${isFirst}`, {
+        console.log(`http://${properties.backendUrl}:${properties.backendPort}/cars/upload/${carId}?isFirst=${isFirst}`)
+        const response = await fetch(`http://${properties.backendUrl}:${properties.backendPort}/cars/upload/${carId}?isFirst=${isFirst}`, {
           method: 'POST',
           body: formData,
         });
@@ -71,7 +72,9 @@ function ImageUploadComponent({ oldCarId, isFirst, passCarId }) {
         maxCount={1} // You can limit the number of files to upload
         accept="image/*" // Accept only image files
       >
-        <Button icon={<UploadOutlined />}>Upload Image</Button>
+        <Tooltip title="Upload">
+        <Button icon={<UploadOutlined />}/>
+        </Tooltip>
       </Upload>
     );
   }

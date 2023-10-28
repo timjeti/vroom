@@ -1,6 +1,6 @@
 import React from 'react';
 import AppCard from './AppCard';
-import { Col, Row } from 'antd';
+import { Col, Row, Divider } from 'antd';
 import CarInitDb from './CarInitDb';
 
 const AllCars = () => {
@@ -17,7 +17,9 @@ const AllCars = () => {
             
             { Array.isArray(photoList)? (
                   (photoList.map((photo, index) => (
-                      <Col className="gutter-row"> <AppCard key={index} {...photo}/> </Col>
+                      <Col className="gutter-row"> <AppCard key={index} {...photo}/> 
+                      <Divider orientation="left"/></Col>
+                      
                   )))
                 ) 
                 :

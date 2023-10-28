@@ -1,8 +1,11 @@
-import React from 'react';
 import { Carousel, Image } from 'antd';
 import photo1 from './assets/photo1.jpg';
 import photo2 from './assets/photo2.jpg';
 import photo3 from './assets/photo3.jpg';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { properties } from './properties';
+
 const contentStyle = {
   height: '350px',
   color: '#fff',
@@ -12,6 +15,33 @@ const contentStyle = {
 };
 
 const AppCarousel = () => {
+
+  const [imageFiles, setImageFiles] = useState([]);
+  const [fileList, setFileList] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://${properties.backendUrl}:${properties.backendPort}/slider`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error('Network response was not ok');
+      })
+      .then((result) => {
+        const newFileList = result.map((imageFile) => {
+          const slider_url = imageFile.slider_url;
+          return {
+            url: slider_url
+          };
+        });
+        setFileList(newFileList);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, [properties.backendUrl, properties.backendPort]);
+
+
 return(
     <Carousel autoplay>
         {/* <div>
@@ -26,15 +56,20 @@ return(
         <div>
         <h3 style={contentStyle}>4</h3>
         </div> */}
-        <div>
-        <Image src={photo1} alt="Photo 1" />
-      </div>
-      <div>
-        <Image src={photo2} alt="Photo 2" />
-      </div>
-      <div>
-        <Image src={photo3} alt="Photo 3" />
-      </div>
+
+      { Array.isArray(fileList)? (
+                  (fileList.map((slider, index) => (
+                    <div>
+                      <Image src={slider.url} alt="Photo 1" />
+                    </div> 
+                  )))
+                ) 
+                :
+                (
+                  <p></p>
+                )
+            }
+      
     </Carousel>
 );
 

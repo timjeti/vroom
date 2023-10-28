@@ -9,7 +9,16 @@ CREATE TABLE cars (
   car_path VARCHAR(255)
 );
 
-INSERT INTO cars (car_path, car_name, car_price) VALUES
-  ('./assets/photo1.jpg', 'Hyundai Creta', 1000),
-  ('./assets/photo2.jpg', 'Mahindra Scorpio', 2000),
-  ('./assets/photo1.jpg', 'Hyundai Creta', 3000);
+INSERT INTO cars (car_id, car_path, car_name, car_price) VALUES
+('101','./assets/photo1.jpg','Hyundai Creta',1000),
+('102','./assets/photo2.jpg','Mahindra Scorpio',2000),
+('103','./assets/photo1.jpg','Hyundai Creta',3000);
+
+
+UPDATE cars SET car_name = ?,car_price = ? WHERE car_id = ?;
+
+CREATE TABLE admin (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL
+);

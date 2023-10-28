@@ -5,7 +5,7 @@ const {Footer} = Layout;
 const AppFooter = () => {
     return <>
         <Footer>
-        <p>This is footer</p>
+        <p>Jaawo.com</p>
         </Footer>
         
     </>

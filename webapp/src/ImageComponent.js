@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { properties } from './properties';
 
 function ImageComponent({ carId }) {
   const [imageSrc, setImageSrc] = useState(null);
 
   useEffect(() => {
     // Make a GET request to fetch the image
-    fetch(`http://localhost:4000/cars/upload/${carId}`, {
+    fetch(`http://${properties.backendUrl}:${properties.backendPort}/cars/upload/${carId}`, {
       method: 'GET',
       headers: {
         // Add any headers required for your API request

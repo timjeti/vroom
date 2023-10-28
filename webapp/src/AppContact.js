@@ -1,6 +1,10 @@
 import React from 'react';
+import { ContactsFilled, UserOutlined, MailOutlined, PhoneOutlined, QuestionCircleOutlined, CheckOutlined  } from "@ant-design/icons";
+import { Button, Row, Col, Form, Input, Card } from 'antd';
+import { Typography } from "antd";
+import { FaComment } from 'react-icons/fa6';
+const { TextArea } = Input;
 
-import { Button, Row, Col, Form, Input } from 'antd';
 const onFinish = (values) => {
   console.log('Success:', values);
 };
@@ -9,81 +13,86 @@ const onFinishFailed = (errorInfo) => {
 };
 
 const AppContact = () => {
-
+  const { Title } = Typography;
     return (
+    <>
 
-    <Row>
-        <Col span={12} offset={6}>
-        <Form
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+
+    <Row> 
+      <Col> 
+      <Title level={3} color='black'> <FaComment/> Your Feedback Will Help Us Improve</Title>
+      </Col>
+    </Row>
+
+    </div>
+
+    <div
+      style={{
+        marginBottom: 15,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}>
+
+    <Card style={{ width: 500 }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
+          <Title level={3}><ContactsFilled/> Contact Us</Title>
+    </div>
+    {/* <Row> */}
+        {/* <Col span={12} offset={6}> */}
+    <Form
     name="basic"
-    labelCol={{
-      span: 5,
-    }}
-    wrapperCol={{
-      span: 15,
-    }}
-    style={{
-      paddingTop: 35,
-      maxWidth: 800,
-      border: '1px solid #d9d9d9'
-    }}
-    initialValues={{
-      remember: true,
-    }}
+    className="login-form"
+    initialValues={{ remember: true }}
     onFinish={onFinish}
     onFinishFailed={onFinishFailed}
     autoComplete="off"
   >
-    <Form.Item
-      label="Name"
+  <Form.Item
       name="name"
-      rules={[
-        {
-          required: true,
-          message: 'Please input your username!',
-        },
-      ]}
+      rules={[{ required: true, message: "Please input your name!" }]}
     >
-      <Input />
+      <Input
+        prefix={<UserOutlined className="site-form-item-icon" />}
+        placeholder="Full Name"
+      />
     </Form.Item>
 
     <Form.Item
-      label="Email"
       name="email"
-      rules={[
-        {
-          required: true,
-          message: 'Please input your email!',
-        },
-      ]}
+      rules={[{ required: true, message: "Please input your email!" }]}
     >
-      <Input/>
+      <Input
+        prefix={<MailOutlined className="site-form-item-icon" />}
+        placeholder="Email"
+      />
     </Form.Item>
 
     <Form.Item
-      label="Phone"
       name="phone"
-      rules={[
-        {
-          required: true,
-          message: 'Please input your phone bumber!',
-        },
-      ]}
+      rules={[{ required: true, message: "Please input your phone!" }]}
     >
-      <Input/>
+      <Input
+        prefix={<PhoneOutlined className="site-form-item-icon" />}
+        placeholder="Phone Number"
+      />
     </Form.Item>
 
     <Form.Item
-      label="Query"
       name="query"
-      rules={[
-        {
-          required: true,
-          message: 'Please input your email!',
-        },
-      ]}
+      rules={[{ required: true, message: "Please input your query!" }]}
     >
-      <Input.TextArea/>
+      <TextArea
+        placeholder="Your Query"
+        autoSize={{ minRows: 3, maxRows: 5 }}
+      />
     </Form.Item>
 
     <Form.Item
@@ -92,16 +101,18 @@ const AppContact = () => {
         span: 16,
       }}
     >
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
+        <Button htmlType="submit" icon={<CheckOutlined />}>Submit</Button>
     </Form.Item>
   </Form>
 
-        </Col>
-    </Row>
-    
+        {/* </Col> */}
+    {/* </Row> */}
+  </Card>
+  </div>
+  </>
 );
+
+
 
 
 

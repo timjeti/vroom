@@ -1,6 +1,5 @@
 import { React,  useState } from 'react';
 import {  Input, Modal } from 'antd';
-import ImgUpload from './ImgUpload';
 import ImageUploadComponent from './ImageUploadComponent';
 import CarApi from './CarApi';
 
@@ -30,6 +29,7 @@ const NewCar = ({model_status}) => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    if(carName === '' || carPrice === '')
     CarApi.deleteCar(carId);
   };
 
@@ -38,7 +38,6 @@ const NewCar = ({model_status}) => {
       <Modal title="Enter content title" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Input placeholder='Enter Car Name' onChange={(e) => {setCarName(e.target.value)}}/>
         <Input placeholder='Enter Car Price' onChange={(e) => {setCarPrice(e.target.value)}}/>
-        {/* <ImgUpload/> */}
         <ImageUploadComponent isFirst={true} passCarId={setCarIdFromChld}/>
         
       </Modal>

@@ -1,8 +1,7 @@
 import { React } from 'react';
-import { EditOutlined, EllipsisOutlined, PhoneOutlined, WhatsAppOutlined } from '@ant-design/icons';
+import { PhoneOutlined, WhatsAppOutlined } from '@ant-design/icons';
 import { Card, Button, Col, Row } from 'antd';
 import { FaIndianRupeeSign } from 'react-icons/fa6';
-import Icon from '@ant-design/icons/lib/components/Icon';
 import ImageComponent from './ImageComponent';
 const { Meta } = Card;
 
@@ -26,7 +25,7 @@ const AppCard = ({car_id, car_name, car_price}) => {
     const message = encodeURIComponent("I am interested in booking Hyundai Creta car");
 
     // Create the WhatsApp URL with the pre-filled message
-    const whatsappUrl = `https://web.whatsapp.com/send?phone=918876501740&text=${message}&app_absent=0`;
+    const whatsappUrl = `whatsapp://send?phone=918876501740&text=${message}&app_absent=0`;
 
     // Open WhatsApp in a new window or tab
     window.open(whatsappUrl, '_blank');
@@ -49,14 +48,14 @@ const AppCard = ({car_id, car_name, car_price}) => {
         <Col span={18}><Meta title={car_name}/></Col>
         <Col >
           <div>
-              <FaIndianRupeeSign style={{ fontSize: '12px', marginRight: '1px' }}/><span style={{ fontWeight: 'bold' }}> {car_price}</span>
+              <FaIndianRupeeSign style={{ fontSize: '12', marginRight: '1' }}/><span style={{ fontWeight: 'bold' }}> {car_price}</span>
           </div>
         </Col>
         </Row>
 
         
         
-        <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ marginTop: '16', display: 'flex', justifyContent: 'space-between' }}>
         <Button  type="primary" icon={<WhatsAppOutlined key="chat"/>} onClick={handleChatClick}>
           Chat
         </Button>
