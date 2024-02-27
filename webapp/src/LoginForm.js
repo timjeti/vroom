@@ -2,19 +2,20 @@ import React from "react";
 import { Form, Input, Button, Checkbox, Card } from "antd";
 import { UserOutlined, LockOutlined, CarFilled } from "@ant-design/icons";
 import { Typography } from "antd";
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { properties } from './properties';
+import Cookies from 'js-cookie';
 const { Title } = Typography;
 
 
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isAuthenticated = localStorage.getItem('isAuthenticated')
-  const useState = () => {
+  // const dispatch = useDispatch();
+  // const isAuthenticated = localStorage.getItem('isAuthenticated')
+  // const useState = () => {
 
-  }
+  // }
   const onFinish = (values) => {
     console.log("Logging In");
     console.log("Received values of form: ", values);
@@ -23,10 +24,31 @@ const LoginForm = () => {
     //   localStorage.setItem("password", values.password);
     // }
     // dispatch(setAuthenticated());
-    if(isAuthenticated != 'true'){
-        localStorage.setItem('isAuthenticated', 'true');
+    const payload = {
+      'username':values.username,
+      'password':values.password,
     }
-    navigate('/rowmanager')
+    fetch(`${properties.backendUrl}/auth/signin`,
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(function (res) {
+        if(res.status === 200){
+            res.json().then((result) => {
+            Cookies.set(`${properties.jwtidentifier}`, result.token)
+            navigate('/carmanager')
+          })
+        }else{
+          navigate('/admincontrol')
+        }
+        
+        // alert("Wrong Credentials Provided")
+      })
   };
 
   const handleForgotPassword = (e) => {
@@ -35,10 +57,10 @@ const LoginForm = () => {
     alert("This feature is disabled right now!")
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    console.log("Handle registration logic here");
-  };
+  // const handleRegister = (e) => {
+  //   e.preventDefault();
+  //   console.log("Handle registration logic here");
+  // };
 
   return (
     <div
@@ -70,28 +92,19 @@ const LoginForm = () => {
         </Form.Item>
         <Form.Item
           name="password"
-          
+          // rules={[{ required: true, message: "Please input your Password!" }]}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
+            // type="password"
             placeholder="Password"
           />
-          <a
-            style={{ float: "right" }}
-            className="login-form-forgot"
-
-            href=""
-            onClick={handleForgotPassword}
-          >
-            Forgot password
-          </a>
         </Form.Item>
-        <Form.Item>
+        {/* <Form.Item>
           <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>Remember me</Checkbox>
           </Form.Item>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item>
           <Button
             type="primary"

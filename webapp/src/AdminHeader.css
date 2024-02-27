@@ -1,0 +1,20 @@
+/* MyComponent.css */
+.sidebar_btn {
+    display: flex; /* or inline-block or flex, depending on your layout */
+    /* Add other styles as needed */
+    font-size: 16;
+    width: 64;
+    background-color: #F5F5F5;
+  }
+  
+  /* Media query to hide the button on screens smaller than or equal to "sm" */
+  @media (max-width: 576px) {
+    .sidebar_btn {
+      display: none;
+    }
+  }
+  
+  .sidebar_hdr {
+    background-color: #F5F5F5;
+    padding: 0;
+  }

@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { properties } from './properties';
+import Cookies from 'js-cookie';
+
+// const authToken = Cookies.get(`${properties.jwtidentifier}`)
 
 function CarInitDb(){
   const [cars, setCars] = useState('');
-  const apiUrl = `http://${properties.backendUrl}:${properties.backendPort}/cars`;
+  const apiUrl = `${properties.backendUrl}/cars`;
 
   useEffect(() => {
     fetch(apiUrl)

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { getSliders,deleteSlider,addSlider } from './SliderApi';
-import axios from 'axios';
+import { deleteSlider } from './SliderApi';
 import { properties } from './properties';
+import { getImageUrl } from './UsersApi';
 
 // Import all image files from the "assets" folder
 // const imagesContext = require.context('./assets', false, /\.(png|jpe?g|gif|svg)$/);
@@ -18,14 +18,13 @@ const getBase64 = (file) =>
 
 
 const ImgUpload = () => {
-  const [imageFiles, setImageFiles] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
 
   useEffect(() => {
-    fetch(`http://${properties.backendUrl}:${properties.backendPort}/slider`)
+    fetch(`${properties.backendUrl}/slider`)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -33,10 +32,11 @@ const ImgUpload = () => {
         throw new Error('Network response was not ok');
       })
       .then((result) => {
-        setImageFiles(result);
+        // setImageFiles(result);
         const newFileList = result.map((imageFile) => {
           const name = `${imageFile.slider_id}`;
-          const slider_url = imageFile.slider_url;
+          //not using slider_url since it is fixed to localhost
+          const slider_url = getImageUrl(imageFile.slider_path);
           return {
             uid: name,
             name,
@@ -79,8 +79,8 @@ const ImgUpload = () => {
     try {
       const formData = new FormData();
       formData.append('image', file);
-      // console.log(`http://${properties.backendUrl}:${properties.backendPort}/cars/upload/${carId}?isFirst=${isFirst}`)
-      const response = await fetch(`http://${properties.backendUrl}:${properties.backendPort}/slider/`, {
+      // console.log(`${properties.backendUrl}/cars/upload/${carId}?isFirst=${isFirst}`)
+      const response = await fetch(`${properties.backendUrl}/slider/`, {
         method: 'POST',
         body: formData,
       });

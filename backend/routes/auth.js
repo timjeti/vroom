@@ -2,16 +2,14 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const tokenver = require('../tokenver');
 
-const users = [
-    {
-      username: 'exampleUser',
-      // Hashed password for "password123"
-      password: '$2b$10$7R.77Yp1eugRxKtJrm8ayuS0Ppr.FI49sjq0JXb2DH99QK/tUy3NO',
-    },
-  ];
+const secret_key = tokenver.secret_key
 
+    
 router.post('/signin', async (req, res) => {
+  console.log("Signing in user")
   const { username, password } = req.body;
 
   // Retrieve the stored password hash from the database
@@ -28,7 +26,13 @@ router.post('/signin', async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
       if (passwordMatch) {
-        res.status(200).json({ message: 'Login successful'});
+        console.log('Login successful');
+        jwt.sign({ username }, secret_key, { expiresIn: '36000s' }, (err, token) => {
+          res.json({
+          token
+          });
+        });
+        
       } else {
         res.status(401).json({ error: 'Login failed'});
       }
@@ -39,12 +43,14 @@ router.post('/signin', async (req, res) => {
   router.post('/register', async (req, res) => {
     const { username, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const values = [username, hashedPassword];
+    
+    const state = 0; // Default state value
+    const timestamp = new Date(); // Current timestamp
     // Find the user by username
     // SQL query to insert a new car entry into the 'cars' table
-    const query = 'INSERT INTO admin (username, password) VALUES (?,?)';
+    const query = 'INSERT INTO admin (username, password, timestamp) VALUES (?,?,?)';
     // Values to be inserted
-    
+    const values = [username, hashedPassword, timestamp];
 
     // Execute the SQL query to insert the new car entry
     connection.query(query, values, (err, results) => {
@@ -55,8 +61,15 @@ router.post('/signin', async (req, res) => {
         res.status(201).json({ message: 'User created' });
     }
     });
+
+        // FORMAT OF TOKEN
+    // Authorization: Bearer <access_token>
+  
   
     
   });
 
-  module.exports = router;
+  module.exports = router
+  // module.exports ={
+  //   jwt, secret_key, verifyToken
+  // }

@@ -1,0 +1,11 @@
+.card_wrapper {
+    display: flex; /* or inline-block or flex, depending on your layout */
+    
+  }
+  
+  /* Media query to hide the button on screens smaller than or equal to "sm" */
+  @media (max-width: 576px) {
+    .card_wrapper {
+      width: 200;
+    }
+  }

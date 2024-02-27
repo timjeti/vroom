@@ -95,7 +95,42 @@ class FileUtils {
     return fileName
   }
 
+  static getUserIdToUpload(req, file) {
+    const userId = req.params.userId;
+    var dir_path = `./uploads/users/idnt/`
+    console.log(file.mimetype)
+    if(file.mimetype == 'image/jpeg' || file.mimetype == 'image/jpg'  || file.mimetype == 'image/png'){
+      return `${userId}.png`;
+    } else{
+      throw new Error('Unsupported file type for image')
+    }
+  }
+
+  static getUserProfileToUpload(req, file) {
+    const userId = req.params.userId;
+    var dir_path = `./uploads/users/prof/`
+    console.log(file.mimetype)
+    if(file.mimetype == 'image/jpeg' || file.mimetype == 'image/jpg'  || file.mimetype == 'image/png'){
+      return `${userId}.png`;
+    } else{
+      throw new Error('Unsupported file type for image')
+    }
+  }
+
+  static deleteFile(fileName) {
+    var filePath = this.getAbsolutePath(fileName);
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.error(`Error deleting slider file: ${fileName}`, err);
+        return;
+      }
+      console.log(`Slider File deleted successfully. ${fileName}`)
+    });
+  }
+
 }
+
+
 
 
 

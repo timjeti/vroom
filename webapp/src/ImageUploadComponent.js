@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, Button, message, Tooltip } from 'antd';
+import { Upload, Button, message, Tooltip, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { properties } from './properties';
+import { uploadCar } from './CarApi';
 
-function ImageUploadComponent({ oldCarId, isFirst, passCarId }) {
+function ImageUploadComponent({ carId }) {
    
     const [fileList, setFileList] = useState([]);
-    const [carId, setCarId] = useState([new Date().getTime().toString()])
+    const [isModalOpen, setIsModalOpen] = useState(true);
 
-    useEffect(() => {
-        if(!isFirst){
-          passCarId(oldCarId);
-          setCarId(oldCarId)
-        }else{
-          passCarId(carId);
-        }
-      }, [isFirst, oldCarId, carId, passCarId]);    
-  
     const onChange = (info) => {
       handleChange(info)
       if (info.file.status === 'done') {
@@ -45,26 +37,19 @@ function ImageUploadComponent({ oldCarId, isFirst, passCarId }) {
       };
   
     const customRequest = async ({ file, onSuccess, onError }) => {
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-        console.log(`http://${properties.backendUrl}:${properties.backendPort}/cars/upload/${carId}?isFirst=${isFirst}`)
-        const response = await fetch(`http://${properties.backendUrl}:${properties.backendPort}/cars/upload/${carId}?isFirst=${isFirst}`, {
-          method: 'POST',
-          body: formData,
-        });
-  
-        if (response.ok) {
-          onSuccess();
-        } else {
-          onError();
-        }
-      } catch (error) {
-        onError();
-      }
+      uploadCar(carId, true, file, onSuccess, onError)
     };
+
+    const handleOk = (val) => {
+      setIsModalOpen(false);
+  };
+  
+  const handleCancel = () => {
+      setIsModalOpen(false);
+  };
   
     return (
+      <Modal title="Upload Car Image" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
       <Upload
         fileList={fileList}
         customRequest={customRequest}
@@ -73,9 +58,10 @@ function ImageUploadComponent({ oldCarId, isFirst, passCarId }) {
         accept="image/*" // Accept only image files
       >
         <Tooltip title="Upload">
-        <Button icon={<UploadOutlined />}/>
+        <Button icon={<UploadOutlined />}>Upload</Button>
         </Tooltip>
       </Upload>
+      </Modal>
     );
   }
   

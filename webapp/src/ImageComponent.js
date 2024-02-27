@@ -6,7 +6,7 @@ function ImageComponent({ carId }) {
 
   useEffect(() => {
     // Make a GET request to fetch the image
-    fetch(`http://${properties.backendUrl}:${properties.backendPort}/cars/upload/${carId}`, {
+    fetch(`${properties.backendUrl}/cars/upload/${carId}`, {
       method: 'GET',
       headers: {
         // Add any headers required for your API request
@@ -26,7 +26,7 @@ function ImageComponent({ carId }) {
   return (
     <>
       {imageSrc ? (
-        <img src={imageSrc} alt="Fetched Image" />
+        <img src={imageSrc} alt="" />
       ) : (
         <p>Loading image...</p>
       )}

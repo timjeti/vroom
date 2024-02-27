@@ -1,0 +1,5 @@
+/* Adjust the size of the Date Picker popup */
+.custom-date-picker .ant-picker-panel {
+    width: 250px; /* Set your preferred width */
+  }
+  

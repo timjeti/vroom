@@ -17,8 +17,34 @@ INSERT INTO cars (car_id, car_path, car_name, car_price) VALUES
 
 UPDATE cars SET car_name = ?,car_price = ? WHERE car_id = ?;
 
+ALTER TABLE `cars`
+ADD COLUMN `available` BOOLEAN DEFAULT true;
+
 CREATE TABLE admin (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE `tenant` (
+  `id` VARCHAR(11) PRIMARY KEY,
+  `profile_details` INTEGER,
+  `age` INTEGER,
+  `email` VARCHAR(30),
+  `name` VARCHAR(30),
+  `profile_path` VARCHAR(40),
+  `identity_path` VARCHAR(40)
+);
+
+CREATE TABLE `tenant_history` (
+  `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+  `tenant_phone` VARCHAR(11),
+  `car_id` VARCHAR(11),
+  `price` INTEGER,
+  `pending` INTEGER,
+  `city` VARCHAR(20),
+  `start` VARCHAR(20),
+  `end` VARCHAR(20),
+  FOREIGN KEY (`tenant_phone`) REFERENCES `tenant` (`id`),
+  FOREIGN KEY (`car_id`) REFERENCES `cars` (`car_id`)
 );

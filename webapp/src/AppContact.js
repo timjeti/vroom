@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContactsFilled, UserOutlined, MailOutlined, PhoneOutlined, QuestionCircleOutlined, CheckOutlined  } from "@ant-design/icons";
+import { ContactsFilled, UserOutlined, MailOutlined, PhoneOutlined, CheckOutlined  } from "@ant-design/icons";
 import { Button, Row, Col, Form, Input, Card } from 'antd';
 import { Typography } from "antd";
 import { FaComment } from 'react-icons/fa6';

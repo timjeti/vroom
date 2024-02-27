@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { properties } from './properties';
+import Cookies from 'js-cookie';
 
-
+const authToken = Cookies.get(`${properties.jwtidentifier}`)
+const headers = {
+    'Authorization': `Bearer ${authToken}`, // Include the token in the 'Authorization' header
+    'Content-Type': 'application/json' // Set the content type to JSON
+  };
 
 export const addSlider = async (file) => {
 
     const formData = new FormData();
     formData.append('image', file);
     try{
-        const response = await axios.post(`http://${properties.backendUrl}:${properties.backendPort}/slider/`, formData,{
+        await axios.post(`${properties.backendUrl}/slider/`, formData,{
             headers: {
                 'Content-Type': 'multipart/form-data', // Important for file uploads
+                'Authorization': `Bearer ${authToken}`
             },
         });
       } catch (error) {
@@ -21,11 +26,11 @@ export const addSlider = async (file) => {
 }
 
 export const deleteSlider = (slider_id) => {
-    axios.delete(`http://${properties.backendUrl}:${properties.backendPort}/slider/${slider_id}`)
+    axios.delete(`${properties.backendUrl}/slider/${slider_id}`, {headers})
 }
 
 export const getSliders = () => {
-    const response = axios.get(`http://${properties.backendUrl}:${properties.backendPort}/slider`)
+    axios.get(`${properties.backendUrl}/slider`, {headers})
     .then((response)=>{
         return response.data;
     })

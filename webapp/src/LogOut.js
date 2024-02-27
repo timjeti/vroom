@@ -1,22 +1,24 @@
-import { React,  useState } from 'react';
-import {  Button, Space } from 'antd';
-import { LogoutOutlined } from '@ant-design/icons';
+import { React } from 'react';
+import {  Button } from 'antd';
 import { FaLock } from 'react-icons/fa6';
+import Cookies from 'js-cookie';
+import { properties } from './properties';
 import { useNavigate } from 'react-router-dom';
 
 const LogOut = () => {
     const navigate = useNavigate();
     
     const performLogout = () => {
-        localStorage.removeItem('isAuthenticated');
-        navigate('/login')
+        // localStorage.removeItem('isAuthenticated');
+        Cookies.remove(`${properties.jwtidentifier}`)
+        navigate('/admincontrol')
     } 
 
 
     return (
         <>
             <Button  onClick={performLogout}>
-                <FaLock/><span style={{marginLeft:5}}>Logout</span>
+                <FaLock/><span>Logout</span>
             </Button>
             
         </>

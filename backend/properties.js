@@ -1,8 +1,8 @@
 
 
 const properties = {
-    url:"http://localhost",
-    port:4000
+    url:"https://${properties.backendUrl}"
+    // url:"localhost"
 }
 
 module.exports = properties

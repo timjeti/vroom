@@ -1,15 +1,15 @@
-import { React,  useState, useEffect } from 'react';
+import { React,  useState } from 'react';
 import { Button, Row, Col, Form, Input, Tooltip } from 'antd';
 import ImageUploadComponent from './ImageUploadComponent';
 import { DeleteOutlined, RightCircleFilled } from '@ant-design/icons';
 import CarApi from './CarApi';
 
-const onFinish = (values) => {
-    console.log('Success:', values);
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
+// const onFinish = (values) => {
+//     console.log('Success:', values);
+//   };
+//   const onFinishFailed = (errorInfo) => {
+//     console.log('Failed:', errorInfo);
+//   };
 
 const CarManagerRow = ({ car_id, car_name, car_price}) => {
 
@@ -99,7 +99,7 @@ const CarManagerRow = ({ car_id, car_name, car_price}) => {
                 <Form.Item
                 name="photo"
                 >
-                <ImageUploadComponent oldCarId={car_id} isFirst={false} passCarId={setCarIdFromChld}/>
+                <ImageUploadComponent oldCarId={car_id} isFirst={false} newCarId={setCarIdFromChld}/>
                 </Form.Item>
             </Col>
             <Col span={2}>

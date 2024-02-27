@@ -1,42 +1,76 @@
 // store.js
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import thunk from 'redux-thunk';
 
-// Create a slice for authentication
-const authSlice = createSlice({
-  name: 'auth',
+// collapsiblePanelSlice state handler
+const collapsiblePanelSlice = createSlice({
+  name: 'collapsiblePanel',
   initialState: {
-    isAuthenticated: false,
+    isCollapsed: true,
   },
   reducers: {
-    setAuthenticated: (state) => {
-      state.isAuthenticated = true;
-    },
-    setUnauthenticated: (state) => {
-      state.isAuthenticated = false;
+    toggleCollapse: (state) => {
+      state.isCollapsed = !state.isCollapsed;
     },
   },
 });
 
-export const { setAuthenticated, setUnauthenticated } = authSlice.actions;
 
-const persistConfig = {
-  key: 'root', // key for the storage
-  storage, // specify the storage method (local storage, etc.)
-  whitelist: ['auth'], // specify which slices to persist
-};
+//footer state handler
+export const { toggleCollapse } = collapsiblePanelSlice.actions;
 
-const persistedReducer = persistReducer(persistConfig, authSlice.reducer);
+const collapsibleFooterSlice = createSlice({
+  name: 'collapsibleFooter',
+  initialState: {
+    isCollapsed: false,
+  },
+  reducers: {
+    footerCollapse: (state, payload) => {
+      state.isCollapsed = payload;
+    },
+  },
+});
 
+export const { footerCollapse } = collapsibleFooterSlice.actions;
+
+//login form values
+
+const userLoginSlice = createSlice({
+  name: 'userLoginState',
+  initialState: {
+    data: null,
+  },
+  reducers: {
+    userLoginReducer: (state, payload) => {
+      state.data = payload;
+    },
+  },
+});
+
+export const { userLoginReducer } = userLoginSlice.actions;
+
+//user details form
+const userDetailsSlice = createSlice({
+  name: 'userDetailsState',
+  initialState: {
+    data: null,
+  },
+  reducers: {
+    userDetailsReducer: (state, payload) => {
+      state.data = payload;
+    },
+  },
+});
+
+export const { userDetailsReducer } = userDetailsSlice.actions;
+
+// Create the Redux store
 const store = configureStore({
   reducer: {
-    auth: persistedReducer // use the persisted reducer
+    collapsiblePanel: collapsiblePanelSlice.reducer,
+    collapsibleFooter: collapsibleFooterSlice.reducer,
+    userLoginState: userLoginSlice.reducer,
+    userDetailsState: userDetailsSlice.reducer,
   },
-  middleware: [thunk]
 });
-
-export const persistor = persistStore(store);
 
 export default store;

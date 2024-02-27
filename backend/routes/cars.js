@@ -5,6 +5,10 @@ const router = express.Router();
 const connection = require('../db'); // Import the database connection module
 var fileUtils = require('../FileUtils.js')
 const multer = require('multer');
+const jwt = require('jsonwebtoken')
+const tokenver = require('../tokenver.js')
+const secret_key = tokenver.secret_key
+
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -26,9 +30,8 @@ var upload = multer({ storage : storage})
 // Route for fetching car details
 router.get('/', (req, res) => {
   // SQL query to fetch car details
-  const query = 'SELECT car_id, car_name, car_price, car_path FROM cars';
-
-  // Execute the SQL query using the connection from the imported module
+  console.log("Retrieving all the Cars")
+  const query = 'SELECT car_id, car_name, car_price, car_price_min, car_cc, car_path, car_type, available FROM cars';
   connection.query(query, (err, results) => {
     if (err) {
       console.error('Error fetching car details:', err);
@@ -38,116 +41,149 @@ router.get('/', (req, res) => {
       res.json(results);
     }
   });
+  // Execute the SQL query using the connection from the imported module
 });
 
-router.put('/:carId', (req, res) => {
-  const carId = req.params.carId;
-  const updatedCar = req.body; // This should contain the updated car data
+router.put('/:carId', tokenver.verifyToken, (req, res) => {
+  // if(!req.oidc.isAuthenticated()){
+  //   res.status(401).json({ error: 'User not authorized!' });
+  // }
+  console.log("Updating an existing car")
+  jwt.verify(req.token, secret_key, (err) => {
+    if(err){
+      res.status(401).json({ error: 'Authentication Failure' });
+    }else{
+      const carId = req.params.carId;
+      const updatedCar = req.body; // This should contain the updated car data
 
-  // SQL query to update car details in the 'cars' table
-  const query = 'UPDATE cars SET car_name=?, car_price=?, car_path=? WHERE car_id=?';
+      // SQL query to update car details in the 'cars' table
+      const query = 'UPDATE cars SET car_name=?, car_price=?,car_price_min=?, car_cc=?, car_type=?, available=? WHERE car_id=?';
 
-  // Values to be updated
-  const values = [updatedCar.car_name, updatedCar.car_price, updatedCar.car_path, carId];
-
-  // Execute the SQL query to update the car details
-  connection.query(query, values, (err, results) => {
-    if (err) {
-      console.error('Error updating car details:', err);
-      res.status(500).json({ error: 'Failed to update car details' });
-    } else {
-      if (results.affectedRows > 0) {
-        res.json({ message: 'Car details updated successfully' });
-      } else {
-        res.status(404).json({ error: 'Car not found' });
-      }
-    }
-  });
-})
-
-router.post('/', (req, res) => {
-  const { car_id, car_name, car_price } = req.body; // Extract car details from the request body
-
-  console.log(car_id)
-  // SQL query to insert a new car entry into the 'cars' table
-  const query = 'UPDATE cars SET car_name = ?,car_price = ? WHERE car_id = ?';
-
-  // Values to be inserted
-  const values = [car_name, car_price, car_id];
-
-  // Execute the SQL query to insert the new car entry
-  connection.query(query, values, (err, results) => {
-    if (err) {
-      console.error('Error inserting new car entry:', err);
-      res.status(500).json({ error: 'Failed to insert new car entry' });
-    } else {
-      res.json({ message: 'New car entry inserted successfully' });
-    }
-  });
-});
-
-router.delete('/:carId', (req, res) => {
-  const carId = req.params.carId;
-  const updatedCar = req.body; // This should contain the updated car data
-
-  // SQL query to update car details in the 'cars' table
-  const query = 'DELETE FROM cars WHERE car_id=?';
-
-  // Values to be updated
-  const values = [carId];
-
-  // Execute the SQL query to update the car details
-  connection.query(query, values, (err, results) => {
-    if (err) {
-      console.error('Error deleting car entry:', err);
-      res.status(500).json({ error: 'Failed to delete car details' });
-    } else {
-      if (results.affectedRows > 0) {
-        fileUtils.deleteUploadedFile(carId);
-        res.json({ message: 'Car details deleted successfully' });
-      } else {
-        res.status(404).json({ error: 'Car not found' });
-      }
-    }
-  });
-});
-
-router.post('/upload/:carId', upload.single('image'), async (req, res) => {
-	console.log("uploading picture")
-  const carId = req.params.carId;
-  const isFirst = req.query.isFirst;
-  if(!isFirst){
-    res.status(201).json({ message: 'Image uploaded successfully' });
-  }
-  const query = 'INSERT INTO cars (car_id, car_path) VALUES (?,?)';
-  const car_path = `uploads/${carId}`
-  const values = [carId, car_path];
-  
-	try {
-		const filename = req.file;
-		console.log(`file_name2: ${filename}`)
+      // Values to be updated
+      const values = [updatedCar.car_name, updatedCar.car_price, updatedCar.car_price_min, updatedCar.car_cc, updatedCar.car_type, updatedCar.available, carId];
 
       // Execute the SQL query to update the car details
-    connection.query(query, values, (err, results) => {
-      if (err) {
-        if(err.message.includes('Duplicate entry')){
-          res.status(201).json({ message: 'Image uploaded successfully' });
-          return;
+      connection.query(query, values, (err, results) => {
+        if (err) {
+          console.error('Error updating car details:', err);
+          res.status(500).json({ error: 'Failed to update car details' });
+        } else {
+          if (results.affectedRows > 0) {
+            res.json({ message: 'Car details updated successfully' });
+          } else {
+            res.status(404).json({ error: 'Car not found' });
+          }
         }
-        console.error('Error uploading car image:', err);
-        fileUtils.deleteUploadedFile(carId);
-        res.status(500).json({ error: 'Failed to upload car image' });
-      } else {
+      });
+    }
+  })
+})
+
+router.post('/', tokenver.verifyToken, (req, res) => {
+  console.log("Adding a new car")
+  jwt.verify(req.token, secret_key, (err) => {
+    if(err){
+      res.status(401).json({ error: 'Authentication Failure' });
+    }else{
+      const { car_id, car_name, car_price, car_price_min, car_cc, car_type } = req.body; // Extract car details from the request body
+  
+      console.log(car_id)
+      // SQL query to insert a new car entry into the 'cars' table
+      const query = 'INSERT INTO cars (car_id, car_name, car_price, car_price_min, car_cc, car_type) VALUES (?, ?, ?, ?)';
+    
+      // Values to be inserted
+      const values = [car_id, car_name, car_price, car_price_min, car_cc, car_type];
+    
+      // Execute the SQL query to insert the new car entry
+      connection.query(query, values, (err, results) => {
+        if (err) {
+          console.error('Error inserting new car entry:', err);
+          res.status(500).json({ error: 'Failed to insert new car entry' });
+        } else {
+          console.log("Car meta details added successfuly")
+          res.json({ message: 'New car entry inserted successfully' });
+        }
+      });
+    }
+  })
+});
+
+router.delete('/:carId', tokenver.verifyToken, (req, res) => {
+  console.log("Removing a car")
+  jwt.verify(req.token, secret_key, (err) => {
+    if(err){
+      res.status(401).json({ error: 'Authentication Failure' });
+    }else{
+      const carId = req.params.carId;
+      const updatedCar = req.body; // This should contain the updated car data
+    
+      // SQL query to update car details in the 'cars' table
+      const query = 'DELETE FROM cars WHERE car_id=?';
+    
+      // Values to be updated
+      const values = [carId];
+    
+      // Execute the SQL query to update the car details
+      connection.query(query, values, (err, results) => {
+        if (err) {
+          console.error('Error deleting car entry:', err);
+          res.status(500).json({ error: 'Failed to delete car details' });
+        } else {
+          if (results.affectedRows > 0) {
+            fileUtils.deleteUploadedFile(carId);
+            res.json({ message: 'Car details deleted successfully' });
+          } else {
+            res.status(404).json({ error: 'Car not found' });
+          }
+        }
+      });
+    }
+  })
+});
+
+router.post('/upload/:carId', upload.single('image'),tokenver.verifyToken, async (req, res) => {
+	console.log("Uploading a car image")
+  jwt.verify(req.token, secret_key, (err) => {
+    if(err){
+      res.status(401).json({ error: 'Authentication Failure' });
+    }else{
+      const carId = req.params.carId;
+      const isFirst = req.query.isFirst;
+      if(!isFirst){
         res.status(201).json({ message: 'Image uploaded successfully' });
+        return
       }
-    });
-	} 
-	catch (error) {
-    // console.log(error);
-    return res.status(500).json({ message: 'Internal server error' });
-	}
-	}
-	);
+      const query = 'UPDATE cars SET car_path=? WHERE car_id=?';
+      const car_path = `uploads/${carId}`
+      const values = [car_path, carId];
+      
+      try {
+        const file = req.file;
+        console.log(`file_name2: ${file.filename}`)
+    
+          // Execute the SQL query to update the car details
+        connection.query(query, values, (err, results) => {
+          if (err) {
+            if(err.message.includes('Duplicate entry')){
+              res.status(209).json({ message: 'Image already exists' });
+              return;
+            }
+            console.error('Error uploading car image:', err);
+            fileUtils.deleteUploadedFile(carId);
+            res.status(500).json({ error: 'Failed to upload car image' });
+          } else {
+            console.log('Car Image uploaded successfully')
+            res.status(201).json({ message: 'Image uploaded successfully' });
+          }
+        });
+      } 
+      catch (error) {
+        // console.log(error);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+    }
+  })
+	});
 
   //In this api exceptions are handled properly
 router.get('/upload/:carId',async (req, res) => {

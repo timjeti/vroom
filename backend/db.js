@@ -4,10 +4,11 @@ const mysql = require('mysql2');
 
 // Create a MySQL connection
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Vermelion23@',
-  database: 'jaawo',
+  // host: '127.0.0.1',
+  user: "root",
+  password: "Vermelion23@",
+  database: "jaawo",
+  socketPath: "/cloudsql/self-savari:us-central1:jaawo"
 });
 
 // Connect to the MySQL database
